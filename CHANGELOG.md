@@ -2,6 +2,21 @@
 
 *Please check the [releases](https://github.com/cars10/elasticvue/releases) page if you need version release dates.*
 
+# 0.39.0
+
+* [fix]: improve elasticsearch 8 support, fixes [#93][i93]
+* [fix]: elasticsearch version not updated, fixes [#94][i94]
+* [fix]: add additional button to reset the whole custom search body, fixes [#95][i95]
+* adds support for arm64 and arm/v7, fixes [#76][i76]
+
+[i76]: https://github.com/cars10/elasticvue/issues/76
+
+[i93]: https://github.com/cars10/elasticvue/issues/93
+
+[i94]: https://github.com/cars10/elasticvue/issues/94
+
+[i95]: https://github.com/cars10/elasticvue/issues/95
+
 # 0.38.0
 
 This version includes some fixes for outdated versions of elasticsearch (like `2.x` and `5.x`).
