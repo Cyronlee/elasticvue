@@ -19,7 +19,8 @@
                       :label="setting"
                       :value="setting"
                       class="my-0 v-input--checkbox--full-labels"
-                      color="primary-button" hide-details/>
+                      color="primary-button"
+                      hide-details/>
         </div>
       </slot>
     </div>
@@ -27,7 +28,7 @@
 </template>
 
 <script>
-  import { computed, ref, watch } from '@vue/composition-api'
+  import { computed, ref, watch } from 'vue'
 
   export default {
     name: 'multi-settings',

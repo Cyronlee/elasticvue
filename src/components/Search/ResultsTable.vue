@@ -2,7 +2,7 @@
   <div>
     <v-card-text>
       <div class="clearfix">
-        <div class="float-right d-inline-block">
+        <div class="float-right d-flex">
           <v-text-field id="filter"
                         v-model="filter"
                         :label="$t('search.results_table.filter.label')"
@@ -15,6 +15,8 @@
 
           <settings-dropdown :badge="columns.length > filteredColumns.length"
                              :button-title="$t('search.results_table.settings.title')">
+            <single-setting v-model="stickyTableHeader"
+                            :name="$t('search.results_table.settings.sticky_table_header.label')"/>
             <multi-setting v-model="selectedColumns"
                            :settings="columns"
                            :name="$t('search.results_table.settings.columns')"/>
@@ -29,7 +31,7 @@
                   :loading="loading || filterLoading"
                   :options.sync="options"
                   :server-items-length="totalHits"
-                  class="table--condensed table--fixed-header">
+                  :class="tableClasses">
       <template v-slot:item="item">
         <result :doc="item.item" :filtered-columns="filteredColumns" @openDocument="openDocument"/>
       </template>
@@ -44,13 +46,11 @@
       </template>
 
       <template v-slot:footer.prepend>
-        <v-btn :disabled="filteredItems.length === 0"
-               :href="downloadJsonHref"
-               download="search.json"
-               small
-               @click="setDownloadHref">
-          {{ $t('search.results_table.download_as_json') }}
-        </v-btn>
+        <download-button small
+                         download="search.json"
+                         :text="$t('search.results_table.download_as_json')"
+                         :disabled="filteredItems.length === 0"
+                         :generateDownloadData="generateDownloadData"/>
       </template>
 
       <v-progress-linear slot="progress" color="blue" indeterminate/>
@@ -68,8 +68,10 @@
   import { vuexAccessors } from '@/helpers/store'
   import { useAsyncFilter } from '@/mixins/UseAsyncTableFilter'
   import { debounce, renameForbiddenObjectKeys, sortableField } from '@/helpers'
-  import { computed, ref, watch } from '@vue/composition-api'
+  import { computed, ref, watch } from 'vue'
   import { useElasticsearchRequest } from '@/mixins/RequestComposition'
+  import SingleSetting from '@/components/shared/TableSettings/SingleSetting'
+  import DownloadButton from '@/components/shared/DownloadButton'
 
   export default {
     name: 'results-table',
@@ -77,7 +79,9 @@
       SettingsDropdown,
       MultiSetting,
       ModalDataLoader,
-      Result
+      Result,
+      SingleSetting,
+      DownloadButton
     },
     props: {
       body: {
@@ -99,8 +103,9 @@
         filter,
         options,
         selectedColumns,
-        columns
-      } = vuexAccessors('search', ['q', 'filter', 'options', 'selectedColumns', 'columns'])
+        columns,
+        stickyTableHeader
+      } = vuexAccessors('search', ['q', 'filter', 'options', 'selectedColumns', 'columns', 'stickyTableHeader'])
       const { filterLoading, asyncFilterTable } = useAsyncFilter()
 
       const hits = computed(() => {
@@ -208,11 +213,16 @@
         modalOpen.value = true
       }
 
-      const downloadJsonHref = ref('#')
-      const setDownloadHref = () => {
-        const value = typeof props.body === 'string' ? props.body : JSON.stringify(props.body)
-        downloadJsonHref.value = `data:application/json,${encodeURIComponent(value)}`
+      const generateDownloadData = () => {
+        return typeof props.body === 'string' ? props.body : JSON.stringify(props.body)
       }
+
+      const tableClasses = computed(() => {
+        return {
+          'table--condensed': true,
+          'table--fixed-header': stickyTableHeader.value
+        }
+      })
 
       return {
         filterLoading,
@@ -228,9 +238,10 @@
         filter,
         options,
         columns,
+        stickyTableHeader,
+        tableClasses,
         selectedColumns,
-        downloadJsonHref,
-        setDownloadHref
+        generateDownloadData
       }
     }
   }

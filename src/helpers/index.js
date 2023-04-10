@@ -1,9 +1,10 @@
 import { parseJsonBigInt, stringifyJsonBigInt } from '@/helpers/json_parse'
+import { DEFAULT_SEARCH_RESULT_COLUMNS } from '@/consts'
 
 const SORTABLE_TYPES = ['long', 'integer', 'double', 'float', 'date', 'boolean', 'keyword']
 
 export function sortableField (fieldName, property) {
-  if (['_index', '_type', '_id'].includes(fieldName)) return fieldName
+  if (DEFAULT_SEARCH_RESULT_COLUMNS.includes(fieldName)) return fieldName
 
   if (property) {
     if (SORTABLE_TYPES.includes(property.type)) {
@@ -33,8 +34,11 @@ export function capitalize (string) {
 export function buildFetchAuthHeader (username, password) {
   if (username.length > 0 && password.length > 0) {
     return 'Basic ' + Buffer.from(username + ':' + password).toString('base64')
-  } else {
+  } else if (username.length > 0) {
     return 'Basic ' + Buffer.from(username).toString('base64')
+  } else if (password.length > 0) {
+    // Assume password is an API key
+    return 'ApiKey ' + password
   }
 }
 
@@ -101,4 +105,24 @@ export const nodeRoleTitle = role => {
   if (role.includes('-')) title += 'coordinating nodes\r\n'
 
   return title
+}
+
+export const reloadHomePage = (router, instanceId) => {
+  try {
+    const currentRoute = router.currentRoute
+
+    if (currentRoute.name === 'Home' && currentRoute.params.instanceId === instanceId) {
+      window.location.reload()
+    } else {
+      const route = { name: 'Home', params: { instanceId } }
+      if (router.mode === 'history') {
+        const url = router.resolve(route).href
+        window.location.replace(url)
+      } else {
+        router.push(route)
+        router.go()
+      }
+    }
+  } catch (e) {
+  }
 }

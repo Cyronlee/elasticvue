@@ -6,7 +6,7 @@
           <new-repository @reloadData="emitReloadData"/>
         </v-col>
         <v-col>
-          <div class="d-inline-block float-right">
+          <div class="float-right">
             <v-text-field id="filter"
                           v-model="filter"
                           :label="$t('defaults.filter.label')"
@@ -30,16 +30,20 @@
                   class="table--condensed table--fixed-header"
                   item-key="name">
       <template v-slot:item="props">
-        <tr class="tr--clickable" @click="() => showSnapshots(props.item.name)">
+        <tr>
           <td>{{ props.item.name }}</td>
           <td>{{ props.item.type }}</td>
           <td :title="stringifyJsonBigInt(props.item.settings, null, '\t')">
             {{ stringifyJsonBigInt(props.item.settings) }}
           </td>
           <td>
-            <v-btn @click.stop="deleteRepository(props.item.name)">
+            <v-btn :to="{name: 'Snapshots', params: {repositoryName: props.item.name}}" class="mr-2">
+              <v-icon>mdi-backup-restore</v-icon>
+              Manage Snapshots
+            </v-btn>
+            <v-btn @click.stop="deleteRepository(props.item.name)"
+                   :title="$t('repositories.repositories_table.table.row.delete')">
               <v-icon>mdi-delete</v-icon>
-              {{ $t('repositories.repositories_table.table.row.delete') }}
             </v-btn>
           </td>
         </tr>
@@ -60,13 +64,15 @@
   import NewRepository from '@/components/Repositories/NewRepository'
   import { DEFAULT_ITEMS_PER_PAGE } from '@/consts'
   import { vuexAccessors } from '@/helpers/store'
-  import { computed } from '@vue/composition-api'
+  import { computed } from 'vue'
   import store from '@/store'
   import i18n from '@/i18n'
   import { useElasticsearchRequest } from '@/mixins/RequestComposition'
   import { stringifyJsonBigInt } from '@/helpers/json_parse'
   import { filterItems } from '@/helpers/filters'
   import { showSnackbar } from '@/mixins/ShowSnackbar'
+  import { askConfirm } from '@/services/tauri/dialogs'
+  import { useRouter } from '@/helpers/composition'
 
   export default {
     name: 'repositories-table',
@@ -102,22 +108,26 @@
 
       const emitReloadData = () => (context.emit('reloadData'))
 
+      const { router } = useRouter()
       const showSnapshots = repository => {
         store.commit('snapshots/setRepository', repository)
-        context.root.$router.push({ name: 'Snapshots' })
+        router.push({ name: 'Snapshots' })
       }
 
       const { requestState, callElasticsearch } = useElasticsearchRequest()
       const deleteRepository = name => {
-        if (confirm(i18n.t('repositories.repositories_table.delete_repository.confirm', { name: name }))) {
-          callElasticsearch('snapshotDeleteRepository', { repository: name })
-            .then(() => {
-              emitReloadData()
-              showSnackbar(requestState.value, {
-                body: i18n.t('repositories.repositories_table.delete_repository.growl', { name: name })
-              })
-            }).catch(() => showSnackbar(requestState.value))
-        }
+        askConfirm(i18n.t('repositories.repositories_table.delete_repository.confirm', { name }))
+          .then(confirmed => {
+            if (confirmed) {
+              callElasticsearch('snapshotDeleteRepository', { repository: name })
+                .then(() => {
+                  emitReloadData()
+                  showSnackbar(requestState.value, {
+                    body: i18n.t('repositories.repositories_table.delete_repository.growl', { name: name })
+                  })
+                }).catch(() => showSnackbar(requestState.value))
+            }
+          })
       }
 
       return {

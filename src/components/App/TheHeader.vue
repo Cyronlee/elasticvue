@@ -18,42 +18,25 @@
     <div class="flex-grow-1"/>
 
     <v-toolbar-items v-if="wasConnected">
-      <v-btn id="navbar_home" exact text to="/">{{ $t('app.header.navigation.home') }}</v-btn>
-      <v-btn id="navbar_nodes" text to="/nodes">{{ $t('app.header.navigation.nodes') }}</v-btn>
-      <v-btn id="navbar_shards" text to="/shards">{{ $t('app.header.navigation.shards') }}</v-btn>
-      <v-btn id="navbar_indices" text to="/indices">{{ $t('app.header.navigation.indices') }}</v-btn>
-      <v-btn id="navbar_search" text to="/search">{{ $t('app.header.navigation.search') }}</v-btn>
-      <v-btn id="navbar_query_rest" text to="/rest">{{ $t('app.header.navigation.rest') }}</v-btn>
-
-      <v-menu offset-y>
-        <template v-slot:activator="{on}">
-          <v-btn id="navbar_snapshots" v-on="on" :class="navbarSnapshotClasses" text>
-            {{ $t('app.header.navigation.snapshots') }}
-            <v-icon>mdi-menu-down</v-icon>
-          </v-btn>
-        </template>
-
-        <v-list>
-          <v-list-item id="navbar_snapshots_repositories" to="/snapshot_repositories">
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ $t('app.header.navigation.repositories') }}
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-
-          <v-list-item id="navbar_snapshots_snapshots" to="/snapshots">
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ $t('app.header.navigation.snapshots') }}
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-
-      <v-btn id="navbar_utilities" text to="/utilities">{{ $t('app.header.navigation.utilities') }}</v-btn>
-      <v-btn id="navbar_settings" text to="/settings">
+      <v-btn id="navbar_home" exact text :to="{name: 'Home'}">
+        {{ $t('app.header.navigation.home') }}
+      </v-btn>
+      <v-btn id="navbar_nodes" text :to="{name: 'Nodes'}">
+        {{ $t('app.header.navigation.nodes') }}
+      </v-btn>
+      <v-btn id="navbar_shards" text :to="{name: 'Shards'}">
+        {{ $t('app.header.navigation.shards') }}
+      </v-btn>
+      <v-btn id="navbar_indices" text :to="{name: 'Indices'}">
+        {{ $t('app.header.navigation.indices') }}
+      </v-btn>
+      <v-btn id="navbar_search" text :to="{name: 'Search'}">{{ $t('app.header.navigation.search') }}</v-btn>
+      <v-btn id="navbar_query_rest" text :to="{name: 'Rest'}">{{ $t('app.header.navigation.rest') }}</v-btn>
+      <v-btn id="navbar_query_rest" text :to="{name: 'Repositories'}">
+        {{ $t('app.header.navigation.snapshots') }}
+      </v-btn>
+      <v-btn id="navbar_utilities" text :to="{name: 'Utilities'}">{{ $t('app.header.navigation.utilities') }}</v-btn>
+      <v-btn id="navbar_settings" text :to="{name: 'Settings'}">
         <v-icon>mdi-cog</v-icon>
       </v-btn>
     </v-toolbar-items>
@@ -61,16 +44,17 @@
 </template>
 
 <script>
-  import { computed, onBeforeUnmount, onMounted, ref } from '@vue/composition-api'
+  import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
   import store from '@/store'
   import InstanceSelection from '@/components/ElasticsearchInstance/InstanceSelection'
+  import { useRouter, useVuetify } from '@/helpers/composition'
 
   export default {
     name: 'app.header',
     components: {
       InstanceSelection
     },
-    setup (props, context) {
+    setup () {
       const scrolledDown = ref(false)
       const setScrolledDown = () => (scrolledDown.value = window.pageYOffset > 0)
       onMounted(() => {
@@ -80,18 +64,20 @@
         if (typeof window !== 'undefined') window.removeEventListener('scroll', setScrolledDown)
       })
 
+      const { route } = useRouter()
       const navbarSnapshotClasses = computed(() => {
         return {
-          'v-btn--active': /^\/snapshot/.test(context.root.$route.path)
+          'v-btn--active': /\/snapshot/.test(route.path)
         }
       })
 
       const dense = computed(() => {
-        return context.root.$vuetify.breakpoint.mdAndDown || scrolledDown.value
+        const vuetify = useVuetify()
+        return vuetify.breakpoint.mdAndDown || scrolledDown.value
       })
 
       const logoSize = computed(() => {
-        if (dense) {
+        if (dense.value) {
           return '32'
         } else {
           return '48'
@@ -99,7 +85,7 @@
       })
 
       const wasConnected = computed(() => {
-        return store.state.connection.instances.length > 0
+        return store.state.connection.activeInstanceIdx !== null
       })
 
       const dark = computed(() => {

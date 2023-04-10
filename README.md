@@ -1,11 +1,11 @@
 # elasticvue
 
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/donate?hosted_button_id=65GDZCZTUBVRL)
-[![Build Status](https://travis-ci.org/cars10/elasticvue.svg?branch=develop)](https://travis-ci.org/cars10/elasticvue)
 [![Chrome web store](https://img.shields.io/chrome-web-store/v/hkedbapjpblbodpgbajblpnlpenaebaa?label=chrome%20extension)](https://chrome.google.com/webstore/detail/elasticvue/hkedbapjpblbodpgbajblpnlpenaebaa)
 [![Edge extension](https://img.shields.io/badge/dynamic/json?label=microsoft%20edge%20add-on&query=%24.version&url=https%3A%2F%2Fmicrosoftedge.microsoft.com%2Faddons%2Fgetproductdetailsbycrxid%2Fgeifniocjfnfilcbeloeidajlfmhdlgo)](https://microsoftedge.microsoft.com/addons/detail/geifniocjfnfilcbeloeidajlfmhdlgo)
 [![Firefox addon](https://img.shields.io/amo/v/elasticvue?label=firefox%20add-on)](https://addons.mozilla.org/en-US/firefox/addon/elasticvue/)
 [![Docker build](https://img.shields.io/docker/image-size/cars10/elasticvue)](https://hub.docker.com/r/cars10/elasticvue)
+[![AUR version](https://img.shields.io/aur/version/elasticvue-bin?label=UNOFFICIAL%20aur)](https://aur.archlinux.org/packages/elasticvue-bin)
 
 Elasticsearch gui for your browser [https://elasticvue.com](https://elasticvue.com)
 
@@ -17,8 +17,6 @@ Contents
 
 1. [About](#about)
 2. [Usage](#usage)
-  * [Running elasticvue](#running)
-  * [Elasticsearch Configuration](#elasticsearch-configuration)
 3. [Browser support](#browser-support)
 4. [Troubleshooting](#troubleshooting)
 5. [Comparing with other frontends](#comparing-with-other-frontends)
@@ -34,11 +32,15 @@ right in your browser.
 
 It officially works with the following elasticsearch versions:
 
-* `5.6`
-* `6.8`
+* `8.x` see [Elasticsearch 8](https://github.com/cars10/elasticvue/wiki/Elasticsearch-8)
 * `7.x`
 
-Other versions might or might not work depending on the features you use.
+It also provides limited support for the following, outdated versions:
+
+* `6.8`
+* `5.6`
+
+Check the [FAQ](https://github.com/cars10/elasticvue/wiki/FAQ) for more details.
 
 ### Features
 
@@ -88,8 +90,7 @@ Then open [http://localhost:8080](http://localhost:8080) in your browser.
 
 **Online version**
 
-Visit [http://app.elasticvue.com](http://app.elasticvue.com) or [https://app.elasticvue.com](https://app.elasticvue.com)
-.
+Visit [https://app.elasticvue.com](https://app.elasticvue.com).
 
 **Run locally**
 
@@ -114,7 +115,7 @@ server {
 **Run locally with subdirectory**
 
 If you want to host elasticvue under a subdirectory (like `www.example.com/elasticvue`) then you have to set the
-`VUE_APP_PUBLIC_PATH` environment variable while building elasticvue.
+`VUE_APP_PUBLIC_PATH` environment variable while building elasticvue. **The URL has to start and end with a slash!**
 
 ```bash
 VUE_APP_PUBLIC_PATH=/elasticvue/ yarn build
@@ -139,7 +140,7 @@ See the [official vuejs deployment guide](https://cli.vuejs.org/guide/deployment
 
 ### Elasticsearch configuration
 
-You have to [enable CORS](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-http.html) to allow
+You have to [enable CORS](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-network.html) to allow
 connection to your elasticsearch cluster **if you do not use the browser extensions**.
 
 Find your elasticsearch configuration (for example `/etc/elasticsearch/elasticsearch.yml`) and add the following lines:
@@ -274,8 +275,8 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ### Road to 1.0
 
-* switch to vue-composition-api. Blocked by vuetify (not compatible yet)
-* document, index, snapshot repo and snapshot: add edit/delete [#30][f30]
+* upgrade to vue 3. Blocked by vuetify (not compatible yet)
+* add support to directly edit/delete document [#30][f30]
 * support client certificates when connecting to elasticsearch cluster [#33][f33]
 
 [f30]: https://github.com/cars10/elasticvue/issues/30

@@ -1,6 +1,7 @@
 import { buildFetchAuthHeader } from '@/helpers'
 import { REQUEST_DEFAULT_HEADERS } from '@/consts'
 import { stringifyJsonBigInt } from '@/helpers/json_parse'
+import { fetchMethod } from '@/services/tauri/fetchReqwest'
 
 export class DefaultClient {
   constructor (instance) {
@@ -32,6 +33,11 @@ export class DefaultClient {
   catIndices (params, filter) {
     const query = filter ? `${filter}*` : ''
     return this.request(`_cat/indices/${query}`, 'GET', params)
+  }
+
+  catIndexTemplates (params, filter) {
+    const query = filter ? `${filter}*` : ''
+    return this.request(`_index_template/${query}`, 'GET', params)
   }
 
   catShards (params, filter) {
@@ -180,12 +186,12 @@ export class DefaultClient {
       headers: Object.assign({}, REQUEST_DEFAULT_HEADERS)
     }
 
-    if (this.username.length > 0) {
+    if (this.username.length > 0 || this.password.length > 0) {
       options.headers.Authorization = buildFetchAuthHeader(this.username, this.password)
     }
 
     return new Promise((resolve, reject) => {
-      return fetch(url, options)
+      return fetchMethod(url, options)
         .then(response => {
           if (options.method === 'HEAD') {
             return resolve(response.ok)

@@ -2,6 +2,55 @@
 
 *Please check the [releases](https://github.com/cars10/elasticvue/releases) page if you need version release dates.*
 
+# 0.44.0
+
+* [feat]: show content while reloading, fixes [#125][f125]
+* [feat]: adds index templates table, fixes [#126][f126]
+* restructure snapshots & repositories table
+
+[f125]: https://github.com/cars10/elasticvue/issues/125
+
+[f126]: https://github.com/cars10/elasticvue/issues/126
+
+# 0.43.0
+
+* [feat]: add support to connect via API key, thanks @tkdave, [#110][f110]
+* [feat]: desktop app menu & icon fixes for mac
+* [feat]: dependency updates, use vue 2.7, prepare vue 3.0 update
+
+[f110]: https://github.com/cars10/elasticvue/pull/110
+
+# 0.42.1
+
+* fix build action
+
+# 0.42.0
+
+* [fix]: fix additional issues with cluster selection, fixes [#103][i103]
+* [feat]: show `_score` in search results, fixes [#104][i104]
+
+[i104]: https://github.com/cars10/elasticvue/issues/104
+
+# 0.41.0
+
+* [fix]: fix some issues with browser extensions and cluster swapping, fixes [#103][i103]
+
+[i103]: https://github.com/cars10/elasticvue/issues/103
+
+# 0.40.0
+
+* [fix]: fix shards overview, fixes [#92][i92]
+* [fix]: reset current page if new search has less results than current page, fixes [#99][i99]
+* [fix]: adds option to disable sticky table headers, fixes [#75][i75]
+* [feat]: change url to include cluster the id. This makes it much easier to work with different clusters in different
+  browser tabs.
+
+[i92]: https://github.com/cars10/elasticvue/issues/92
+
+[i99]: https://github.com/cars10/elasticvue/issues/99
+
+[i75]: https://github.com/cars10/elasticvue/issues/75
+
 # 0.39.0
 
 * [fix]: improve elasticsearch 8 support, fixes [#93][i93]

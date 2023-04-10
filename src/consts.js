@@ -11,15 +11,14 @@ export const CONNECTION_STATES = {
   ERROR: 'error'
 }
 
-/**
- * Some defaults used for initial setup.
- */
 export const DEFAULT_NAME = 'default cluster'
 export const DEFAULT_HOST = 'http://localhost:9200'
 export const LOCALSTORAGE_KEY = 'elasticvuex'
 export const INDEXEDDB_NAME = 'elasticvue'
 export const DEFAULT_SEARCH_QUERY = '{\n\t"query": {\n\t\t"query_string": {\n\t\t\t"query": "*"\n\t\t}\n\t},\n\t"size": 10,\n\t"from": 0,\n\t"sort": []\n}'
 export const DEFAULT_HIDE_INDICES_REGEX = '^\\..*'
+export const DEFAULT_SEARCH_RESULT_COLUMNS = ['_index', '_type', '_id', '_score']
+export const DESKTOP_BUILD = !!process.env.VUE_APP_DESKTOP_BUILD
 
 export const REQUEST_DEFAULT_HEADERS = {
   Accept: 'application/json',
@@ -102,6 +101,13 @@ export const REST_QUERY_EXAMPLES = [
     path: '_cat/shards',
     body: '',
     doc: 'https://www.elastic.co/guide/en/elasticsearch/reference/current/cat-shards.html'
+  },
+  {
+    description: 'Create an API key with 1d expiration',
+    method: 'POST',
+    path: '_security/api_key',
+    body: '{\n\t"name": "my-api-key",\n\t"expiration": "1d"\n}',
+    doc: 'https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-create-api-key.html'
   }
 ]
 

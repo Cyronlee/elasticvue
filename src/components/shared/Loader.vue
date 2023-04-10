@@ -18,11 +18,13 @@
   </div>
   <div v-else>
     <v-progress-linear v-if="requestState.loading && !hideProgress" color="blue" indeterminate/>
-    <slot v-else/>
+    <slot/>
   </div>
 </template>
 
 <script>
+  import { writeToClipboard } from '@/services/tauri/clipboard'
+
   export default {
     name: 'loader',
     props: {
@@ -37,7 +39,7 @@
     },
     setup (props) {
       const copy = () => {
-        navigator.clipboard.writeText(props.requestState.apiErrorMessage)
+        writeToClipboard(props.requestState.apiErrorMessage)
       }
 
       return {

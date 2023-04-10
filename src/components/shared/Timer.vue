@@ -15,7 +15,7 @@
 </template>
 
 <script>
-  import { onBeforeUnmount, ref, watch } from '@vue/composition-api'
+  import { onBeforeUnmount, ref, watch } from 'vue'
 
   export default {
     name: 'timer',
@@ -62,6 +62,7 @@
       })
 
       if (props.defaultSetting) {
+        /* eslint-disable vue/no-setup-props-destructure */
         timerSetting.value = props.defaultSetting
       }
 

@@ -189,6 +189,9 @@
       "show_hidden_indices": {
         "label": "查看隐藏索引"
       },
+      "sticky_table_header": {
+        "label": null
+      },
       "table": {
         "headers": {
           "name": "名称",
@@ -220,6 +223,21 @@
       },
       "create_index": {
         "growl": "索引 '{index}' 成功创建。"
+      }
+    }
+  },
+  "index_templates": {
+    "heading": null,
+    "index_templates_table": {
+      "table": {
+        "headers": {
+          "name": null,
+          "index_patterns": null,
+          "priority": null,
+          "version": null,
+          "allow_auto_create": null,
+          "template": null
+        }
       }
     }
   },
@@ -420,7 +438,10 @@
       },
       "settings": {
         "title": "表格设置",
-        "columns": "列"
+        "columns": "列",
+        "sticky_table_header": {
+          "label": null
+        }
       },
       "download_as_json": "下载为 JSON 文件"
     }
@@ -470,7 +491,7 @@
           "label": "用户名 (可选)"
         },
         "password": {
-          "label": "密码 (可选)"
+          "label": "密码或加密的API密钥（可选"
         },
         "uri": {
           "label": "地址"
@@ -585,7 +606,7 @@
     }
   },
   "snapshots": {
-    "heading": "快照",
+    "heading": null,
     "new_snapshot": {
       "heading": "新建快照",
       "form": {

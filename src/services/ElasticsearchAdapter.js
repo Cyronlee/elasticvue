@@ -32,6 +32,10 @@ export default class ElasticsearchAdapter {
     return this.client.catIndices(params, filter)
   }
 
+  catIndexTemplates (params, filter) {
+    return this.client.catIndexTemplates(params, filter)
+  }
+
   catShards (params, filter) {
     params.format = 'json'
     return this.client.catShards(params, filter)

@@ -47,7 +47,7 @@
 </template>
 
 <script>
-  import { ref } from '@vue/composition-api'
+  import { ref, watch } from 'vue'
   import store from '@/store'
 
   export default {
@@ -70,6 +70,8 @@
       const dialog = ref(false)
       const valid = ref(false)
       const newName = ref(props.clusterName)
+
+      watch(() => props.clusterName, value => (newName.value = value))
 
       const closeDialog = () => {
         dialog.value = false

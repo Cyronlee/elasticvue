@@ -11,7 +11,7 @@
           </div>
         </v-col>
         <v-col>
-          <div class="d-inline-block float-right">
+          <div class="float-right">
             <v-checkbox v-model="showHiddenIndices"
                         :label="$t('indices.indices_table.show_hidden_indices.label')"
                         class="d-inline-block mr-6 vertical-align--bottom"
@@ -130,7 +130,7 @@
 </style>
 
 <script>
-  import { computed, ref } from '@vue/composition-api'
+  import { computed, ref } from 'vue'
   import { stringifyJsonBigInt } from '@/helpers/json_parse'
   import { vuexAccessors } from '@/helpers/store'
   import { DEFAULT_ITEMS_PER_PAGE } from '@/consts'

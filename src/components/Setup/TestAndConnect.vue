@@ -81,11 +81,13 @@
   import { useTestConnection } from '@/mixins/TestConnection'
   import store from '@/store'
   import i18n from '@/i18n'
-  import { computed, ref } from '@vue/composition-api'
+  import { computed, ref } from 'vue'
   import SslHint from '@/components/shared/SslHint'
   import AuthorizationHeaderHint from '@/components/shared/AuthorizationHeaderHint'
   import { SHOW_CORS_HINT } from '@/consts'
   import { showSuccessSnackbar } from '@/mixins/ShowSnackbar'
+  import { reloadHomePage } from '@/helpers'
+  import { useRouter } from '@/helpers/composition'
 
   export default {
     name: 'test-and-connect',
@@ -93,7 +95,7 @@
       AuthorizationHeaderHint,
       SslHint
     },
-    setup (props, context) {
+    setup () {
       const {
         testState,
         hasError,
@@ -107,21 +109,19 @@
       } = useTestConnection()
 
       const formValid = ref(false)
-
+      const { router } = useRouter()
       const connectCluster = () => {
         connect()
           .then(() => {
             if (testState.value.connectError) return
             store.commit('connection/setActiveInstanceIdx', 0)
             showSuccessSnackbar({ title: i18n.t('setup.test_and_connect.connected') })
-            context.root.$router.push('/')
+            reloadHomePage(router, 0)
           })
       }
 
       const passwordVisible = ref(false)
-      const usesSSL = computed(() => {
-        return elasticsearchHost.value.uri.match(/^https/)
-      })
+      const usesSSL = computed(() => (elasticsearchHost.value.uri.match(/^https/)))
 
       return {
         hasError,

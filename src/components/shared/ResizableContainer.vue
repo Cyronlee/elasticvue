@@ -7,8 +7,7 @@
 </template>
 
 <script>
-  import { computed, ref, watch } from '@vue/composition-api'
-  import Vue from 'vue'
+  import Vue, { computed, ref, watch } from 'vue'
 
   export default {
     name: 'resizable-container',
@@ -25,6 +24,7 @@
     setup (props) {
       const height = ref(props.initialHeight)
       let dragStartY = 0
+      /* eslint-disable vue/no-setup-props-destructure */
       let dragStartHeight = props.initialHeight
       let resizing = false
 
